@@ -2,6 +2,7 @@ package com.example.qr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.zxing.WriterException;
+
+import java.util.Scanner;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -41,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
                     Bitmap qrBits = qrgEncoder.getBitmap();
                     qrImage.setImageBitmap((qrBits));
                 }
+            }
+        });
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), scanner.class));
             }
         });
     }
