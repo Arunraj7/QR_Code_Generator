@@ -4,8 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +29,30 @@ public class scanner extends AppCompatActivity {
     CodeScanner codeScanner;
     CodeScannerView scannerView;
     TextView resultData;
+    EditText editText;
+    ImageButton copyBtn;
+
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+
+        editText = findViewById(R.id.resultOfQR);
+        copyBtn = findViewById(R.id.copybt);
+
+        copyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("EditText", editText.getText().toString());
+                clipboard.setPrimaryClip(clip);
+//                clip.getDescription();
+                Toast.makeText(scanner.this, "Copied", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         scannerView = findViewById(R.id.scannerView);
         codeScanner = new CodeScanner(this, scannerView);
 
