@@ -1,11 +1,14 @@
 package com.example.qr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +29,9 @@ import java.io.OutputStream;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
+
+
+
 
 public class MainActivity extends AppCompatActivity {
     EditText qrvalue;
@@ -50,12 +56,13 @@ public class MainActivity extends AppCompatActivity {
         downbtn = findViewById(R.id.button3);
         downbtn.setVisibility(View.GONE);
 
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-//            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-//                String[] permission = (Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//                requestPermissions(permission, WRITE_EXTERNAL_STORAGE_CODE);
-//            }
-//        }
+        downbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isStoragePermissionGranted(MainActivity.this);
+
+            }
+        });
 
 
 
@@ -81,33 +88,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        downbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bitmap = ((BitmapDrawable)qrImage.getDrawable()).getBitmap();
-                String time = String.valueOf(qrvalue.getText());
-                File path = Environment.getExternalStorageDirectory();
-                File dir = new File(path+"/DCIM");
-                dir.mkdirs();
-                String imagename = time+".png";
-                File file = new File(dir, imagename);
-                OutputStream out;
 
-                try {
-                    out = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,out);
-                    out.flush();
-                    out.close();
-                    Toast.makeText(MainActivity.this, "Image Saved", Toast.LENGTH_SHORT).show();
-                } catch (Exception e){
-                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
 
-            }
-        });
 
+
+
+
+
+    }
+    public void downloadsOpt(){
+        bitmap = ((BitmapDrawable)qrImage.getDrawable()).getBitmap();
+        String time = String.valueOf(qrvalue.getText());
+        File path = Environment.getExternalStorageDirectory();
+        File dir = new File(path+"/DCIM/QRCode");
+        dir.mkdirs();
+        String imagename = time+".png";
+        File file = new File(dir, imagename);
+        OutputStream out;
+
+        try {
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,out);
+            out.flush();
+            out.close();
+            Toast.makeText(MainActivity.this, "Image Saved", Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void onRequestPermissionResult(int requestcode, String[] permission, int[] grantResults){
+        super.onRequestPermissionsResult(requestcode, permission, grantResults);
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            Toast.makeText(this, "Permission Granted ", Toast.LENGTH_SHORT).show();
+
+        }else if(grantResults[0] == PackageManager.PERMISSION_DENIED){
+            Toast.makeText(this, "Write External Storage Permission Required", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    public Boolean isStoragePermissionGranted(Activity activity){
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                downloadsOpt();
 
+                return true;
+            }
+            else{
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                return false;
+            }
+        }else{
+
+            return true;
+        }
+
+    }
 }
+
+
+

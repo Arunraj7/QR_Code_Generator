@@ -2,10 +2,13 @@ package com.example.qr;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -79,6 +82,7 @@ public class scanner extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onPostResume() {
