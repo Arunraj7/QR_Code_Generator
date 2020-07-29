@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String data = qrvalue.getText().toString();
                 if (data.isEmpty()) {
-                    qrvalue.setError("Value Required");
+                    qrvalue.setError("Field Required");
                 } else {
                     downbtn.setVisibility(View.VISIBLE);
 
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG,100,out);
             out.flush();
             out.close();
-            Toast.makeText(MainActivity.this, "Image Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "QR Saved", Toast.LENGTH_SHORT).show();
         } catch (Exception e){
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
